@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "MobileCloudOffloading"
 include(":app")
 include(":server")
+include(":shared")

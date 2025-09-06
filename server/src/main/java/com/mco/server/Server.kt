@@ -8,25 +8,13 @@ import io.ktor.server.response.*
 import io.ktor.server.request.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
-import kotlinx.serialization.Serializable
-import kotlin.random.Random
 import io.ktor.server.plugins.calllogging.*
 import org.slf4j.event.Level
 
+import com.mco.shared.PiReq
+import com.mco.shared.PiRes
+import com.mco.shared.monteCarloPi
 
-@Serializable data class PiReq(val iterations: Int, val seed: Long)
-@Serializable data class PiRes(val pi: Double, val durationMs: Long)
-
-fun monteCarloPi(iterations: Int, seed: Long): Double {
-    val rnd = Random(seed)
-    var inside = 0
-    repeat(iterations) {
-        val x = rnd.nextDouble()
-        val y = rnd.nextDouble()
-        if (x * x + y * y <= 1.0) inside++
-    }
-    return 4.0 * inside / iterations
-}
 fun main() {
     embeddedServer(Netty, port = 8080) {
         install(ContentNegotiation) { json() }

@@ -14,11 +14,11 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import io.ktor.http.contentType
 
-@Serializable data class PiReq(val iterations: Int, val seed: Long)
-@Serializable data class PiRes(val pi: Double, val durationMs: Long)
+import com.mco.shared.PiReq
+import com.mco.shared.PiRes
+import com.mco.shared.monteCarloPi
 
 class MainActivity : AppCompatActivity() {
     private val client by lazy { HttpClient(Android) { install(ContentNegotiation) { json() } } }
@@ -46,17 +46,6 @@ class MainActivity : AppCompatActivity() {
             val seed = tbSeed.text.toString().toLongOrNull() ?: 1234L
             lifecycleScope.launch { runRemote(serverBase, iterations, seed, tvResult) }
         }
-    }
-
-    private fun monteCarloPi(iterations: Int, seed: Long): Double {
-        val rnd = kotlin.random.Random(seed)
-        var inside = 0
-        repeat(iterations) {
-            val x = rnd.nextDouble()
-            val y = rnd.nextDouble()
-            if (x * x + y * y <= 1.0) inside++
-        }
-        return 4.0 * inside / iterations
     }
 
     private suspend fun runLocal(iterations: Int, seed: Long, tv: TextView) {
