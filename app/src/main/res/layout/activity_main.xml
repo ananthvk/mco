@@ -8,93 +8,127 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/seedLabel"
-        android:layout_width="122dp"
-        android:layout_height="35dp"
-        android:text="Seed: "
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="174dp" />
-
-    <TextView
-        android:id="@+id/tvServerIP"
-        android:layout_width="115dp"
-        android:layout_height="32dp"
-        android:text="Server IP:"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="43dp" />
-
-    <EditText
-        android:id="@+id/tbServerIP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text="http://10.0.2.2:8080"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="43dp" />
-
-    <TextView
-        android:id="@+id/tvIterationsLabel"
-        android:layout_width="122dp"
-        android:layout_height="35dp"
-        android:text="Iterations: "
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="117dp" />
-
-    <EditText
-        android:id="@+id/tbIterations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="10000"
-        tools:layout_editor_absoluteX="152dp"
-        tools:layout_editor_absoluteY="108dp" />
-
-    <EditText
-        android:id="@+id/tbSeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="1234"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="152dp"
-        tools:layout_editor_absoluteY="174dp" />
-
-    <Button
-        android:id="@+id/btnLocal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Execute locally"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="236dp" />
-
-    <Button
-        android:id="@+id/btnRemote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Execute remote"
-        tools:layout_editor_absoluteX="186dp"
-        tools:layout_editor_absoluteY="236dp" />
-
-    <TextView
         android:id="@+id/tvResultLabel"
-        android:layout_width="84dp"
-        android:layout_height="37dp"
+        android:layout_width="74dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="28dp"
         android:text="Result"
-        android:textStyle="bold"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="308dp" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLocal" />
 
     <TextView
         android:id="@+id/tvResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
         android:text="No results yet"
-        tools:layout_editor_absoluteX="31dp"
-        tools:layout_editor_absoluteY="366dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvResultLabel"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/seedLabel"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Seed: "
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/tbSeed"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvIterationsLabel" />
+
+    <TextView
+        android:id="@+id/tvServerIP"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Server IP:"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/tbServerIP"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/tbServerIP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:text="http://10.0.2.2:8080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvServerIP"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvIterationsLabel"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="Iterations: "
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/tbIterations"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvServerIP" />
+
+    <EditText
+        android:id="@+id/tbIterations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:ems="10"
+        android:hint="10000"
+        android:inputType="number"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvIterationsLabel"
+        app:layout_constraintTop_toBottomOf="@+id/tbServerIP" />
+
+    <EditText
+        android:id="@+id/tbSeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="1234"
+        android:inputType="number"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/seedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/tbIterations" />
+
+    <Button
+        android:id="@+id/btnLocal"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Execute locally"
+        app:layout_constraintEnd_toStartOf="@+id/btnRemote"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seedLabel" />
+
+    <Button
+        android:id="@+id/btnRemote"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Execute remote"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnLocal"
+        app:layout_constraintTop_toBottomOf="@+id/tbSeed" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
