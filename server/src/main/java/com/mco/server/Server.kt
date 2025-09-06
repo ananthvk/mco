@@ -10,6 +10,9 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
 import kotlinx.serialization.Serializable
 import kotlin.random.Random
+import io.ktor.server.plugins.calllogging.*
+import org.slf4j.event.Level
+
 
 @Serializable data class PiReq(val iterations: Int, val seed: Long)
 @Serializable data class PiRes(val pi: Double, val durationMs: Long)
@@ -24,13 +27,16 @@ fun monteCarloPi(iterations: Int, seed: Long): Double {
     }
     return 4.0 * inside / iterations
 }
-
-
 fun main() {
     embeddedServer(Netty, port = 8080) {
         install(ContentNegotiation) { json() }
+        install(CallLogging) {
+            level = Level.INFO
+        }
         routing {
-            get("/health") { call.respondText("OK") }
+            get("/health") {
+                call.respondText("OK")
+            }
             post("/offload/pi") {
                 val req = call.receive<PiReq>()
                 val start = System.currentTimeMillis()

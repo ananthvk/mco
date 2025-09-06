@@ -15,6 +15,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor")
     implementation("ch.qos.logback:logback-classic:1.4.14")
+    implementation("io.ktor:ktor-server-call-logging:2.3.12")
+
 }
 
 application { mainClass.set("com.mco.server.ServerKt") }
