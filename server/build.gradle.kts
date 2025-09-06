@@ -4,6 +4,7 @@ plugins {
     // kotlin("jvm") version "2.2.0"
     kotlin("plugin.serialization") version "2.2.0"
     id("io.ktor.plugin") version "3.2.0"
+    id("com.gradleup.shadow") version "9.0.0"
 }
 
 val ktor = "2.3.12"
@@ -13,6 +14,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor")
+    implementation("ch.qos.logback:logback-classic:1.4.14")
 }
 
 application { mainClass.set("com.mco.server.ServerKt") }

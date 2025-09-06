@@ -1,20 +1,82 @@
 package com.mco.mobilecloudoffloading
-
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.engine.android.*
+import io.ktor.client.request.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import io.ktor.http.contentType
+
+@Serializable data class PiReq(val iterations: Int, val seed: Long)
+@Serializable data class PiRes(val pi: Double, val durationMs: Long)
 
 class MainActivity : AppCompatActivity() {
+    private val client by lazy { HttpClient(Android) { install(ContentNegotiation) { json() } } }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        val btnLocal = findViewById<Button>(R.id.btnLocal)
+        val btnRemote = findViewById<Button>(R.id.btnRemote)
+        val tvResult = findViewById<TextView>(R.id.tvResult)
+        val tbServerIP = findViewById<EditText>(R.id.tbServerIP)
+        val tbIterations = findViewById<EditText>(R.id.tbIterations)
+        val tbSeed = findViewById<EditText>(R.id.tbSeed)
+
+        btnLocal.setOnClickListener {
+            val iterations = tbIterations.text.toString().toIntOrNull() ?: 10_000
+            val seed = tbSeed.text.toString().toLongOrNull() ?: 1234L
+            lifecycleScope.launch { runLocal(iterations, seed, tvResult) }
+        }
+
+        btnRemote.setOnClickListener {
+            val serverBase = tbServerIP.text.toString().ifBlank { "http://10.0.2.2:8080" }
+            val iterations = tbIterations.text.toString().toIntOrNull() ?: 10_000
+            val seed = tbSeed.text.toString().toLongOrNull() ?: 1234L
+            lifecycleScope.launch { runRemote(serverBase, iterations, seed, tvResult) }
+        }
+    }
+
+    private fun monteCarloPi(iterations: Int, seed: Long): Double {
+        val rnd = kotlin.random.Random(seed)
+        var inside = 0
+        repeat(iterations) {
+            val x = rnd.nextDouble()
+            val y = rnd.nextDouble()
+            if (x * x + y * y <= 1.0) inside++
+        }
+        return 4.0 * inside / iterations
+    }
+
+    private suspend fun runLocal(iterations: Int, seed: Long, tv: TextView) {
+        tv.text = "Local running..."
+        val start = System.currentTimeMillis()
+        val pi = withContext(Dispatchers.Default) { monteCarloPi(iterations, seed) }
+        val took = System.currentTimeMillis() - start
+        tv.text = "Local done in ${took}ms\nπ ≈ $pi"
+    }
+
+    private suspend fun runRemote(serverBase: String, iterations: Int, seed: Long, tv: TextView) {
+        tv.text = "Remote running..."
+        try {
+            val res: PiRes = client.post("$serverBase/offload/pi") {
+                contentType(io.ktor.http.ContentType.Application.Json)
+                setBody(PiReq(iterations, seed))
+            }.body()
+            tv.text = "Remote done in ${res.durationMs}ms\nπ ≈ ${res.pi}"
+        } catch (e: Exception) {
+            tv.text = "Remote failed: ${e.localizedMessage}"
         }
     }
 }
