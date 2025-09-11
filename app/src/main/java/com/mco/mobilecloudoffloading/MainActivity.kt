@@ -19,6 +19,7 @@ import io.ktor.http.contentType
 import com.mco.shared.PiReq
 import com.mco.shared.PiRes
 import com.mco.shared.monteCarloPi
+import io.ktor.http.ContentType
 
 class MainActivity : AppCompatActivity() {
     private val client by lazy { HttpClient(Android) { install(ContentNegotiation) { json() } } }
@@ -60,9 +61,10 @@ class MainActivity : AppCompatActivity() {
         tv.text = "Remote running..."
         try {
             val res: PiRes = client.post("$serverBase/offload/pi") {
-                contentType(io.ktor.http.ContentType.Application.Json)
-                setBody(PiReq(iterations, seed))
+                contentType(ContentType.Application.Json)
+                setBody(mapOf("iterations" to iterations.toString(), "seed" to seed.toString()))
             }.body()
+
             tv.text = "Remote done in ${res.durationMs}ms\nπ ≈ ${res.pi}"
         } catch (e: Exception) {
             tv.text = "Remote failed: ${e.localizedMessage}"

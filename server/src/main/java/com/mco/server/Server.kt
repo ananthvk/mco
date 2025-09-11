@@ -11,9 +11,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.calllogging.*
 import org.slf4j.event.Level
 
-import com.mco.shared.PiReq
-import com.mco.shared.PiRes
-import com.mco.shared.monteCarloPi
+import io.ktor.http.HttpStatusCode
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
@@ -21,16 +19,17 @@ fun main() {
         install(CallLogging) {
             level = Level.INFO
         }
+        TaskRegistry.register(PiTask)
+
         routing {
             get("/health") {
                 call.respondText("OK")
             }
-            post("/offload/pi") {
-                val req = call.receive<PiReq>()
-                val start = System.currentTimeMillis()
-                val result = monteCarloPi(req.iterations, req.seed)
-                val took = System.currentTimeMillis() - start
-                call.respond(PiRes(pi = result, durationMs = took))
+            post("/offload/{task}") {
+                val taskName = call.parameters["task"] ?: return@post call.respond(HttpStatusCode.NotFound)
+                val task = TaskRegistry.get(taskName) ?: return@post call.respond(HttpStatusCode.NotFound)
+                val params = call.receive<Map<String,String>>()
+                call.respond(task.execute(params))
             }
         }
     }.start(wait = true)
