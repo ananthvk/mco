@@ -53,10 +53,17 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun runLocal(iterations: Int, seed: Long, tv: TextView) {
         tv.text = "Local running..."
-        val start = System.currentTimeMillis()
-        val pi = 0.0
-        val took = System.currentTimeMillis() - start
-        tv.text = "Local done in ${took}ms\nπ ≈ $pi"
+        try {
+            val res: PiResult = offloadOrLocal(client,
+                "http://127.0.0.1",
+                PiTask,
+                mapOf("iterations" to iterations.toString(), "seed" to seed.toString()),
+                false
+            )
+            tv.text = "Local done in ${res.durationMs}ms\nπ ≈ ${res.pi}"
+        } catch (e: Exception) {
+            tv.text = "Local failed: ${e.localizedMessage}"
+        }
     }
 
     private suspend fun runRemote(serverBase: String, iterations: Int, seed: Long, tv: TextView) {
