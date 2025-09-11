@@ -1,5 +1,6 @@
 package com.mco.server
 
+import com.mco.shared.PiTask
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.application.*
@@ -27,9 +28,9 @@ fun main() {
             }
             post("/offload/{task}") {
                 val taskName = call.parameters["task"] ?: return@post call.respond(HttpStatusCode.NotFound)
-                val task = TaskRegistry.get(taskName) ?: return@post call.respond(HttpStatusCode.NotFound)
                 val params = call.receive<Map<String,String>>()
-                call.respond(task.execute(params))
+                TaskRegistry.execute(call, taskName, params)
+
             }
         }
     }.start(wait = true)

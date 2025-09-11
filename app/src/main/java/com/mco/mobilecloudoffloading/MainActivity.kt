@@ -5,6 +5,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.mco.shared.PiResult
+import com.mco.shared.PiTask
+import com.mco.shared.offloadOrLocal
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
@@ -16,10 +19,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 import io.ktor.http.contentType
 
-import com.mco.shared.PiReq
-import com.mco.shared.PiRes
-import com.mco.shared.monteCarloPi
 import io.ktor.http.ContentType
+
+
 
 class MainActivity : AppCompatActivity() {
     private val client by lazy { HttpClient(Android) { install(ContentNegotiation) { json() } } }
@@ -52,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     private suspend fun runLocal(iterations: Int, seed: Long, tv: TextView) {
         tv.text = "Local running..."
         val start = System.currentTimeMillis()
-        val pi = withContext(Dispatchers.Default) { monteCarloPi(iterations, seed) }
+        val pi = 0.0
         val took = System.currentTimeMillis() - start
         tv.text = "Local done in ${took}ms\nπ ≈ $pi"
     }
@@ -60,11 +62,11 @@ class MainActivity : AppCompatActivity() {
     private suspend fun runRemote(serverBase: String, iterations: Int, seed: Long, tv: TextView) {
         tv.text = "Remote running..."
         try {
-            val res: PiRes = client.post("$serverBase/offload/pi") {
-                contentType(ContentType.Application.Json)
-                setBody(mapOf("iterations" to iterations.toString(), "seed" to seed.toString()))
-            }.body()
-
+            val res: PiResult = offloadOrLocal(client,
+                serverBase,
+                PiTask,
+                mapOf("iterations" to iterations.toString(), "seed" to seed.toString()))
+            
             tv.text = "Remote done in ${res.durationMs}ms\nπ ≈ ${res.pi}"
         } catch (e: Exception) {
             tv.text = "Remote failed: ${e.localizedMessage}"
