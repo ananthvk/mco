@@ -1,6 +1,7 @@
 package com.mco.server
 
 import com.mco.shared.PiTask
+import com.mco.shared.PrimeCalculationTask
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.application.*
@@ -21,6 +22,7 @@ fun main() {
             level = Level.INFO
         }
         TaskRegistry.register(PiTask)
+        TaskRegistry.register(PrimeCalculationTask)
 
         routing {
             get("/health") {
