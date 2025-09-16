@@ -1,82 +1,91 @@
-package com.mco.mobilecloudoffloading
+package com.ananth.mco
+
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.mco.shared.PiResult
-import com.mco.shared.PiTask
-import com.mco.shared.offloadOrLocal
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.request.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
-import io.ktor.http.contentType
-
-import io.ktor.http.ContentType
-
-
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
-    private val client by lazy { HttpClient(Android) { install(ContentNegotiation) { json() } } }
+
+    private lateinit var spinnerOperation: Spinner
+    private lateinit var layoutPi: LinearLayout
+    private lateinit var layoutPrime: LinearLayout
+    private lateinit var tvResult: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnLocal = findViewById<Button>(R.id.btnLocal)
-        val btnRemote = findViewById<Button>(R.id.btnRemote)
-        val tvResult = findViewById<TextView>(R.id.tvResult)
-        val tbServerIP = findViewById<EditText>(R.id.tbServerIP)
-        val tbIterations = findViewById<EditText>(R.id.tbIterations)
-        val tbSeed = findViewById<EditText>(R.id.tbSeed)
+        spinnerOperation = findViewById(R.id.spinnerOperation)
+        layoutPi = findViewById(R.id.layoutPi)
+        layoutPrime = findViewById(R.id.layoutPrime)
+        tvResult = findViewById(R.id.tvResult)
 
-        btnLocal.setOnClickListener {
-            val iterations = tbIterations.text.toString().toIntOrNull() ?: 10_000
-            val seed = tbSeed.text.toString().toLongOrNull() ?: 1234L
-            lifecycleScope.launch { runLocal(iterations, seed, tvResult) }
+        val btnPiOption1: Button = findViewById(R.id.btnPiOption1)
+        val btnPiOption2: Button = findViewById(R.id.btnPiOption2)
+        val btnPrimeOption1: Button = findViewById(R.id.btnPrimeOption1)
+        val btnPrimeOption2: Button = findViewById(R.id.btnPrimeOption2)
+
+        // Handle dropdown selection
+        spinnerOperation.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                when (position) {
+                    0 -> { // Pi Operation
+                        layoutPi.visibility = View.VISIBLE
+                        layoutPrime.visibility = View.GONE
+                    }
+                    1 -> { // Prime Operation
+                        layoutPi.visibility = View.GONE
+                        layoutPrime.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        btnRemote.setOnClickListener {
-            val serverBase = tbServerIP.text.toString().ifBlank { "http://10.0.2.2:8080" }
-            val iterations = tbIterations.text.toString().toIntOrNull() ?: 10_000
-            val seed = tbSeed.text.toString().toLongOrNull() ?: 1234L
-            lifecycleScope.launch { runRemote(serverBase, iterations, seed, tvResult) }
+        // Pi buttons
+        btnPiOption1.setOnClickListener {
+            runOperation("pi", "option1")
+        }
+        btnPiOption2.setOnClickListener {
+            runOperation("pi", "option2")
+        }
+
+        // Prime buttons
+        btnPrimeOption1.setOnClickListener {
+            runOperation("prime", "option1")
+        }
+        btnPrimeOption2.setOnClickListener {
+            runOperation("prime", "option2")
         }
     }
 
-    private suspend fun runLocal(iterations: Int, seed: Long, tv: TextView) {
-        tv.text = "Local running..."
-        try {
-            val res: PiResult = offloadOrLocal(client,
-                "http://127.0.0.1",
-                PiTask,
-                mapOf("iterations" to iterations.toString(), "seed" to seed.toString()),
-                false
-            )
-            tv.text = "Local done in ${res.durationMs}ms\nπ ≈ ${res.pi}"
-        } catch (e: Exception) {
-            tv.text = "Local failed: ${e.localizedMessage}"
-        }
-    }
+    private fun runOperation(operation: String, option: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Example URL: adjust server address + port
+                val url = URL("http://10.0.2.2:8080/$operation?option=$option")
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
 
-    private suspend fun runRemote(serverBase: String, iterations: Int, seed: Long, tv: TextView) {
-        tv.text = "Remote running..."
-        try {
-            val res: PiResult = offloadOrLocal(client,
-                serverBase,
-                PiTask,
-                mapOf("iterations" to iterations.toString(), "seed" to seed.toString()))
-            
-            tv.text = "Remote done in ${res.durationMs}ms\nπ ≈ ${res.pi}"
-        } catch (e: Exception) {
-            tv.text = "Remote failed: ${e.localizedMessage}"
+                val response = connection.inputStream.bufferedReader().readText()
+                withContext(Dispatchers.Main) {
+                    tvResult.text = "Result: $response"
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    tvResult.text = "Error: ${e.message}"
+                }
+            }
         }
     }
 }
