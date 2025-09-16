@@ -11,6 +11,8 @@ object PrimeCalculationTask : Offloadable<PrimeCalculationResult> {
         // TODO: Instead of throwing error, return error to client
         val nStr = params["n"] ?: throw IllegalArgumentException("Parameter 'n' is required")
         val n = nStr.toIntOrNull() ?: throw IllegalArgumentException("Parameter 'n' must be a valid integer")
+
+        val start = System.currentTimeMillis()
         val primes = mutableListOf<Int>()
         for (i in 2..n) {
             var isPrime = true
@@ -23,9 +25,10 @@ object PrimeCalculationTask : Offloadable<PrimeCalculationResult> {
             }
             if (isPrime) primes.add(i)
         }
-        return PrimeCalculationResult(n, primes.size)
+        val took = System.currentTimeMillis() - start
+        return PrimeCalculationResult(n, primes.size, took)
     }
 }
 
 @Serializable
-data class PrimeCalculationResult(val upTo: Int, val primeCount: Int)
+data class PrimeCalculationResult(val upTo: Int, val primeCount: Int, val durationMs: Long)

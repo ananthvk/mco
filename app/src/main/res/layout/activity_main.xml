@@ -7,6 +7,78 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/btnLocal4"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="284dp"
+        android:text="Execute locally"
+        app:layout_constraintEnd_toStartOf="@+id/btnRemote"
+        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seedLabel" />
+
+    <EditText
+        android:id="@+id/tbPrimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="276dp"
+        android:ems="10"
+        android:hint="1234"
+        android:inputType="number"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.612"
+        app:layout_constraintStart_toEndOf="@+id/seedLabel"
+        app:layout_constraintTop_toBottomOf="@+id/tbIterations" />
+
+    <TextView
+        android:id="@+id/tvResult4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="No results yet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvResultLabel"
+        app:layout_constraintVertical_bias="0.762" />
+
+    <TextView
+        android:id="@+id/primesUptoLabel"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="288dp"
+        android:text="Primes upto: "
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/tbSeed"
+        app:layout_constraintHorizontal_bias="0.593"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvIterationsLabel" />
+
+    <TextView
+        android:id="@+id/tvResultLabel6"
+        android:layout_width="74dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="276dp"
+        android:text="Result"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLocal" />
+
+    <Button
+        android:id="@+id/btnRemote4"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="276dp"
+        android:text="Execute remote"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintStart_toEndOf="@+id/btnLocal"
+        app:layout_constraintTop_toBottomOf="@+id/tbSeed" />
+
     <TextView
         android:id="@+id/tvResultLabel"
         android:layout_width="74dp"
