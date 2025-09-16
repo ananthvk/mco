@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MobileCloudOffloading</string>
+    <string-array name="operations_array">
+    <item>Pi Operation</item>
+    <item>Prime Operation</item>
+    </string-array>
 </resources>
