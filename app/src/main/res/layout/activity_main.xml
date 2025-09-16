@@ -1,74 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
+    android:background="@drawable/bg_gradient"
     tools:context=".MainActivity">
 
-    <!-- Dropdown to select operation -->
-    <Spinner
-        android:id="@+id/spinnerOperation"
+    <!-- Server IP -->
+    <TextView
+        android:id="@+id/tvServerIP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:entries="@array/operations_array" />
+        android:layout_marginTop="32dp"
+        android:text="Server IP:"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Pi operation buttons -->
-    <LinearLayout
-        android:id="@+id/layoutPi"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/tbServerIP"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="16dp">
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittext_bg"
+        android:ems="10"
+        android:hint="http://10.0.2.2:8080"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        app:layout_constraintStart_toEndOf="@+id/tvServerIP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvServerIP" />
 
-        <Button
-            android:id="@+id/btnPiOption1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pi Option 1" />
-
-        <Button
-            android:id="@+id/btnPiOption2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pi Option 2"
-            android:layout_marginStart="16dp" />
-    </LinearLayout>
-
-    <!-- Prime operation buttons -->
-    <LinearLayout
-        android:id="@+id/layoutPrime"
-        android:layout_width="match_parent"
+    <!-- Iterations -->
+    <TextView
+        android:id="@+id/tvIterationsLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:visibility="gone">
+        android:layout_marginTop="28dp"
+        android:text="Iterations:"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvServerIP" />
 
-        <Button
-            android:id="@+id/btnPrimeOption1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prime Option 1" />
+    <EditText
+        android:id="@+id/tbIterations"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittext_bg"
+        android:hint="10000"
+        android:inputType="number"
+        android:padding="12dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        app:layout_constraintStart_toEndOf="@+id/tvIterationsLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvIterationsLabel" />
 
-        <Button
-            android:id="@+id/btnPrimeOption2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prime Option 2"
-            android:layout_marginStart="16dp" />
-    </LinearLayout>
+    <!-- Seed -->
+    <TextView
+        android:id="@+id/seedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Seed:"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvIterationsLabel" />
 
-    <!-- Result display -->
+    <EditText
+        android:id="@+id/tbSeed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittext_bg"
+        android:hint="1234"
+        android:inputType="number"
+        android:padding="12dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#888888"
+        app:layout_constraintStart_toEndOf="@+id/seedLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/seedLabel" />
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/btnLocal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="#FF9800"
+        android:elevation="6dp"
+        android:text="Execute locally"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/btnRemote"
+        app:layout_constraintHorizontalWeight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seedLabel" />
+
+    <Button
+        android:id="@+id/btnRemote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="#03A9F4"
+        android:elevation="6dp"
+        android:text="Execute remote"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontalWeight="1"
+        app:layout_constraintStart_toEndOf="@+id/btnLocal"
+        app:layout_constraintTop_toBottomOf="@+id/seedLabel" />
+
+    <!-- Result -->
+    <TextView
+        android:id="@+id/tvResultLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Result:"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLocal" />
+
     <TextView
         android:id="@+id/tvResult"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Result will appear here"
-        android:textSize="16sp" />
+        android:layout_marginStart="12dp"
+        android:text="No results yet"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/tvResultLabel"
+        app:layout_constraintTop_toTopOf="@+id/tvResultLabel"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
